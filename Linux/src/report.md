@@ -578,6 +578,7 @@ Remove all tasks from the job scheduler
 
 `$ sudo crontab -l`
 
+
 ![linux](images/linux13_13.png)
 
 
