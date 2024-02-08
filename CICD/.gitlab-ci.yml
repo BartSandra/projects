@@ -1,0 +1,56 @@
+stages: 
+  - build
+  - test
+  - integration_tests
+  - deploy
+  - notify
+
+build-job:
+  stage: build
+  script:
+    - echo "Start..."
+    - cd ./src/cat
+    - make
+    - cd ../grep
+    - make
+  artifacts:
+    paths:
+      - ./src/cat/s21_cat
+      - ./src/grep/s21_grep
+    expire_in: 30 days
+
+style-code:
+  stage: test
+  script:
+    - echo "Clang-format..."
+    - cp ./materials/linters/.clang-format ./src
+    - cd ./src/cat
+    - clang-format -n -Werror *.c *.h
+    - cd ../grep
+    - clang-format -n -Werror *.c *.h
+
+tests:
+  stage: integration_tests
+  script:
+    - echo "Start tests..."
+    - cd ./src/cat
+    - bash test.sh
+    - cd ../grep
+    - bash test.sh
+
+deployment_stage:
+  stage: deploy
+  when: manual
+  script:
+    - echo "Start deploy..."
+    - cd ./src
+    - bash deploy.sh
+    - bash notifications.sh "SUCCESS" 
+
+notifications:
+  stage: notify
+  when: on_failure
+  script:
+    - cd ./src
+    - bash notifications.sh "FAILURE"
+
