@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package transmitter;
+
+option go_package = "transmitter/proto";
+
+
+service TransmitterService {
+  rpc StreamData (StreamRequest) returns (stream TransmitterData) {}
+}
+
+message StreamRequest {}
+
+message TransmitterData {
+  string session_id = 1;
+  double frequency = 2;
+  int64 timestamp = 3;
+}
