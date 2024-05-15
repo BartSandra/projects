@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package service;
+
+option go_package = "project/api/service";
+
+service StreamService {
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc Stream(StreamRequest) returns (stream StreamResponse) {}
+  rpc Stop(StopRequest) returns (StopResponse) {}
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message StreamRequest {
+  int32 interval = 1;
+}
+
+message StreamResponse {
+  int32 number = 1;
+  int64 timestamp = 2;
+}
+
+message StopRequest {
+  string uuid = 1;
+}
+
+message StopResponse {
+  bool success = 1;
+  string message = 2;
+}
