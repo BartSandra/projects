@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package storage;
+
+option go_package = "/storage";
+
+import "google/protobuf/timestamp.proto";
+
+service StorageService {
+  rpc Get(GetRequest) returns (GetResponse) {}
+  rpc GetAll(GetAllRequest) returns (GetAllResponse) {}
+  rpc GetLastTime(GetLastTimeRequest) returns (GetLastTimeResponse) {}
+  rpc Set(SetRequest) returns (SetResponse) {}
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+}
+
+message GetRequest {
+  string uuid = 1;
+}
+
+message GetResponse {
+  string uuid = 1;
+  string name = 2;
+  google.protobuf.Timestamp time = 3;
+}
+
+message GetAllRequest {
+
+}
+
+message GetAllResponse {
+  repeated Record record = 1;
+}
+
+message Record {
+  string uuid = 1;
+  string name = 2;
+  google.protobuf.Timestamp time_update = 3;
+  google.protobuf.Timestamp time_delete = 4;
+}
+
+message GetLastTimeRequest {
+}
+
+message GetLastTimeResponse {
+  google.protobuf.Timestamp time = 1;
+}
+
+message SetRequest {
+  bool is_need_replication = 1;
+  string uuid = 2;
+  string name = 3;
+}
+
+message SetResponse {
+}
+
+message DeleteRequest {
+  bool is_need_replication = 1;
+  string uuid = 2;
+}
+
+message DeleteResponse {
+}
+
+
+//protoc --go_out=. --go_opt=paths=source_relative \
+//    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+//    storage.proto

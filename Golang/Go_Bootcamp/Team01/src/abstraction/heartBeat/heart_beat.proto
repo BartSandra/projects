@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package heartBeat;
+
+option go_package = "/heartBeat";
+
+service HeartBeatService {
+  rpc Pulse(PulseRequest) returns (PulseResponse) {}
+}
+
+message PulseRequest {
+  int32 port = 1;
+  bool is_client = 2;
+}
+
+message PulseResponse {
+  int32 port = 1;
+  repeated int32 cluster_ports = 2;
+  int32 replication_coefficient = 3;
+}
+
+
+//    protoc --go_out=. --go_opt=paths=source_relative \ --go-grpc_out=. --go-grpc_opt=paths=source_relative \ heart_beat.proto
+
+
+//protoc --go_out=. --go_opt=paths=source_relative \
+//    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+//    heart_beat.proto

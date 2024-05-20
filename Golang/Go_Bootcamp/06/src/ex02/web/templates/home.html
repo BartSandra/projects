@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="/web/css/home.css">
+</head>
+<body>
+<img src="/web/images/amazing_logo.png" alt="Логотип">
+{{range .posts}}
+<h2><a href="/post/{{.ID}}">{{.Title}}</a></h2>
+<p>{{.Content | safeHTML}}</p>
+{{end}}
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Post</title>
+    <link rel="stylesheet" href="/web/css/admin_edit.css">
+</head>
+<body>
+<h1>Edit Post</h1>
+<form method="POST" action="/admin/edit/{{.post.ID}}">
+    <label for="title">Title:</label><br>
+    <input type="text" id="title" name="title" value="{{.post.Title}}"><br>
+    <label for="content">Content:</label><br>
+    <textarea id="content" name="content">{{.post.Content | safeHTML}}</textarea><br>
+    <input type="submit" value="Update">
+</form>
+<form method="POST" action="/admin/delete/{{.post.ID}}">
+    <input type="submit" value="Delete">
+</form>
+</body>
+</html>
+

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ .post.Title }}</title>
+    <link rel="stylesheet" href="/web/css/post.css">
+</head>
+<body>
+<h1>{{ .post.Title }}</h1>
+<p>{{ .post.Content | safeHTML }}</p>
+<a href="/">Back</a>
+</body>
+</html>
