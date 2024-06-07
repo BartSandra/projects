@@ -1,0 +1,96 @@
+swagger: "2.0"
+info:
+  title: "Todo List API"
+  description: "API для управления списком задач."
+  version: "1.0.0"
+host: "localhost:8080"
+basePath: "/"
+schemes:
+  - "http"
+paths:
+  /todos:
+    get:
+      summary: "Получение списка задач"
+      parameters:
+        - name: "page"
+          in: "query"
+          description: "Номер страницы для пагинации"
+          required: false
+          type: "integer"
+        - name: "limit"
+          in: "query"
+          description: "Количество задач на странице"
+          required: false
+          type: "integer"
+        - name: "status"
+          in: "query"
+          description: "Фильтр статуса выполнения задачи"
+          required: false
+          type: "string"
+        - name: "due_date"
+          in: "query"
+          description: "Фильтр по дате выполнения задачи"
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: "Список задач успешно получен."
+    post:
+      summary: "Создание новой задачи"
+      parameters:
+        - name: "todo"
+          in: "body"
+          description: "Данные новой задачи"
+          required: true
+          schema:
+            $ref: "#/definitions/Todo"
+      responses:
+        201:
+          description: "Задача успешно создана."
+    put:
+      summary: "Обновление существующей задачи"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: "ID задачи для обновления"
+          required: true
+          type: "integer"
+        - name: "todo"
+          in: "body"
+          description: "Обновленные данные задачи"
+          required: true
+          schema:
+            $ref: "#/definitions/Todo"
+      responses:
+        200:
+          description: "Задача успешно обновлена."
+    delete:
+      summary: "Удаление задачи"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: "ID задачи для удаления"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Задача успешно удалена."
+definitions:
+  Todo:
+    type: "object"
+    required:
+      - "title"
+      - "due_date"
+    properties:
+      id:
+        type: "integer"
+        readOnly: true
+      title:
+        type: "string"
+      description:
+        type: "string"
+      due_date:
+        type: "string"
+        format: "date"
+      completed:
+        type: "boolean"
