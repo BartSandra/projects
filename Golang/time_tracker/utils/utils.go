@@ -7,12 +7,12 @@ import (
 )
 
 func RespondJSON(w http.ResponseWriter, status int, payload interface{}) {
-	log.Debug("Responding with JSON") // Добавьте Debug логи
+	log.Debug("Responding with JSON")
 	response, err := json.Marshal(payload)
 	if err != nil {
 		log.WithFields(log.Fields{
 			"error": err,
-		}).Error("Error marshalling JSON") // Добавьте Error логи
+		}).Error("Error marshalling JSON")
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 		return
@@ -23,7 +23,7 @@ func RespondJSON(w http.ResponseWriter, status int, payload interface{}) {
 }
 
 func RespondError(w http.ResponseWriter, status int, message string) {
-	log.Debug("Responding with error") // Добавьте Debug логи
+	log.Debug("Responding with error")
 	RespondJSON(w, status, map[string]string{"error": message})
 }
 
