@@ -18,14 +18,13 @@ import (
 	"net/url"
 )
 
-
 // DefaultAPIService DefaultAPI service
 type DefaultAPIService service
 
 type ApiInfoGetRequest struct {
-	ctx context.Context
-	ApiService *DefaultAPIService
-	passportSerie *int32
+	ctx            context.Context
+	ApiService     *DefaultAPIService
+	passportSerie  *int32
 	passportNumber *int32
 }
 
@@ -46,24 +45,25 @@ func (r ApiInfoGetRequest) Execute() (*People, *http.Response, error) {
 /*
 InfoGet Method for InfoGet
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiInfoGetRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiInfoGetRequest
 */
 func (a *DefaultAPIService) InfoGet(ctx context.Context) ApiInfoGetRequest {
 	return ApiInfoGetRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return People
+//
+//	@return People
 func (a *DefaultAPIService) InfoGetExecute(r ApiInfoGetRequest) (*People, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *People
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *People
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DefaultAPIService.InfoGet")

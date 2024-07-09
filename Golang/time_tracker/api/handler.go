@@ -12,11 +12,24 @@ import (
 	log "github.com/sirupsen/logrus"
 	"time_tracker/out/go"
 	"context"
+	"database/sql"
 )
 
 func init() {
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetLevel(log.DebugLevel)
+}
+
+func getDB(w http.ResponseWriter) (*sql.DB, error) {
+	db, err := database.NewDB()
+	if err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Error("Error connecting to the database")
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return nil, err
+	}
+	return db, nil
 }
 
 // GetUsers handles the GET /users endpoint.
@@ -36,12 +49,8 @@ func init() {
 //       500: internalServerError
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	log.Debug("GetUsers called")
-	db, err := database.NewDB()
+	db, err := getDB(w)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Error connecting to the database")
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
@@ -81,12 +90,8 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 //       500: internalServerError
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	log.Debug("GetUser called")
-	db, err := database.NewDB()
+	db, err := getDB(w)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Error connecting to the database")
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
@@ -121,12 +126,8 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 //       500: internalServerError
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	log.Debug("CreateUser called")
-	db, err := database.NewDB()
+	db, err := getDB(w)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Error connecting to the database")
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
@@ -156,18 +157,18 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	passportNumber, err := strconv.ParseInt(user.PassportNumber, 10, 32)
 
 	info, _, err := c.DefaultAPI.InfoGet(context.Background()).PassportSerie(int32(passportSerie)).PassportNumber(int32(passportNumber)).Execute()
-if err != nil {
-	log.WithFields(log.Fields{
-		"error": err,
-	}).Warn("Error making request to Swagger API")
-} else {
-	user.Name = info.Name
-	user.Surname = info.Surname
-	if info.Patronymic != nil {
-		user.Patronymic = *info.Patronymic
+		if err != nil {
+			log.WithFields(log.Fields{
+				"error": err,
+			}).Warn("Error making request to Swagger API")
+		} else {
+		user.Name = info.Name
+		user.Surname = info.Surname
+		if info.Patronymic != nil {
+			user.Patronymic = *info.Patronymic
+		}
+		user.Address = info.Address
 	}
-	user.Address = info.Address
-}
 
 	err = database.CreateUser(db, &user)
 	if err != nil {
@@ -210,12 +211,8 @@ func isValidPassportNumber(passportNumber string) bool {
 //       500: internalServerError
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	log.Debug("DeleteUser called")
-	db, err := database.NewDB()
+	db, err := getDB(w)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Error connecting to the database")
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
@@ -250,12 +247,8 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 //       500: internalServerError
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	log.Debug("UpdateUser called")
-	db, err := database.NewDB()
+	db, err := getDB(w)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Error connecting to the database")
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
@@ -300,12 +293,8 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 //       500: internalServerError
 func StartTask(w http.ResponseWriter, r *http.Request) {
 	log.Debug("StartTask called") 
-	db, err := database.NewDB()
+	db, err := getDB(w)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Error connecting to the database")
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
@@ -340,12 +329,8 @@ func StartTask(w http.ResponseWriter, r *http.Request) {
 //       500: internalServerError
 func EndTask(w http.ResponseWriter, r *http.Request) {
 	log.Debug("EndTask called")
-	db, err := database.NewDB()
+	db, err := getDB(w)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Error connecting to the database")
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
@@ -380,12 +365,8 @@ func EndTask(w http.ResponseWriter, r *http.Request) {
 //       500: internalServerError
 func GetTasksByUserAndPeriod(w http.ResponseWriter, r *http.Request) {
 	log.Debug("GetTasksByUserAndPeriod called")
-	db, err := database.NewDB()
+	db, err := getDB(w)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Error("Error connecting to the database")
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()

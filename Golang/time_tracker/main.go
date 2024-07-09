@@ -2,14 +2,14 @@ package main
 
 import (
 	"github.com/joho/godotenv"
+	log "github.com/sirupsen/logrus"
 	"time_tracker/api"
 	"time_tracker/database"
-	log "github.com/sirupsen/logrus"
 )
 
 func init() {
 	log.SetFormatter(&log.JSONFormatter{})
-	log.SetLevel(log.DebugLevel) 
+	log.SetLevel(log.DebugLevel)
 }
 
 func main() {
@@ -37,4 +37,3 @@ func main() {
 
 	log.Debug("Started the API server")
 }
-

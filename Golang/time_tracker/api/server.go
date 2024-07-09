@@ -1,8 +1,8 @@
 package api
 
 import (
-	"net/http"
 	log "github.com/sirupsen/logrus"
+	"net/http"
 )
 
 func init() {
@@ -15,4 +15,3 @@ func Run() {
 	log.Info("Listening to port 8000")
 	log.Fatal(http.ListenAndServe(":8000", NewRouter()))
 }
-

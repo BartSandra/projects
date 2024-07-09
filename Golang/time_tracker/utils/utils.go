@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"net/http"
 	"encoding/json"
 	log "github.com/sirupsen/logrus"
+	"net/http"
 )
 
 func RespondJSON(w http.ResponseWriter, status int, payload interface{}) {
@@ -26,4 +26,3 @@ func RespondError(w http.ResponseWriter, status int, message string) {
 	log.Debug("Responding with error")
 	RespondJSON(w, status, map[string]string{"error": message})
 }
-

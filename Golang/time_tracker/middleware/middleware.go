@@ -1,9 +1,9 @@
 package middleware
 
 import (
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"time"
-	log "github.com/sirupsen/logrus"
 )
 
 func LoggingMiddleware(next http.Handler) http.Handler {
@@ -16,8 +16,8 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 
 		duration := time.Now().Sub(startTime)
 		log.WithFields(log.Fields{
-			"method": r.Method,
-			"uri": r.RequestURI,
+			"method":   r.Method,
+			"uri":      r.RequestURI,
 			"duration": duration,
 		}).Info("Handled request")
 

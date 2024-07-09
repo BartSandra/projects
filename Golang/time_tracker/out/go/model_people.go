@@ -11,8 +11,8 @@ API version: 0.0.1
 package openapi
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,10 +21,10 @@ var _ MappedNullable = &People{}
 
 // People struct for People
 type People struct {
-	Surname string `json:"surname"`
-	Name string `json:"name"`
+	Surname    string  `json:"surname"`
+	Name       string  `json:"name"`
 	Patronymic *string `json:"patronymic,omitempty"`
-	Address string `json:"address"`
+	Address    string  `json:"address"`
 }
 
 type _People People
@@ -154,7 +154,7 @@ func (o *People) SetAddress(v string) {
 }
 
 func (o People) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -187,10 +187,10 @@ func (o *People) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -246,5 +246,3 @@ func (v *NullablePeople) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

@@ -3,14 +3,14 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
-	log "github.com/sirupsen/logrus"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/lib/pq"
+	log "github.com/sirupsen/logrus"
+	"time"
 	"time_tracker/config"
 	"time_tracker/model"
-	"time"
 	"unicode"
 )
 
@@ -87,43 +87,43 @@ func NewDB() (*sql.DB, error) {
 }
 
 func GetUsers(db *sql.DB, filter string, page int) ([]model.User, error) {
-    log.Debug("Fetching users from the database")
-    offset := (page - 1) * 10
-	
-    query := `SELECT * FROM users WHERE name LIKE $1 OR surname LIKE $1 OR patronymic LIKE $1 OR address LIKE $1 LIMIT 10 OFFSET $2`
-    
-    rows, err := db.Query(query, "%" + filter + "%", offset)
-    if err != nil {
-        log.WithFields(log.Fields{
-            "error": err,
-        }).Error("Error executing query")
-        return nil, err
-    }
-    defer rows.Close()
+	log.Debug("Fetching users from the database")
+	offset := (page - 1) * 10
 
-    var users []model.User
-    for rows.Next() {
-        var user model.User
-        err = rows.Scan(&user.ID, &user.PassportNumber, &user.Name, &user.Surname, &user.Patronymic, &user.Address)
-        if err != nil {
-            log.WithFields(log.Fields{
-                "error": err,
-            }).Error("Error scanning row")
-            return nil, err
-        }
-        users = append(users, user)
-    }
+	query := `SELECT * FROM users WHERE name LIKE $1 OR surname LIKE $1 OR patronymic LIKE $1 OR address LIKE $1 LIMIT 10 OFFSET $2`
 
-    if err = rows.Err(); err != nil {
-        log.WithFields(log.Fields{
-            "error": err,
-        }).Error("Error fetching rows")
-        return nil, err
-    }
+	rows, err := db.Query(query, "%"+filter+"%", offset)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Error("Error executing query")
+		return nil, err
+	}
+	defer rows.Close()
 
-    log.Debug("Successfully fetched users from the database")
+	var users []model.User
+	for rows.Next() {
+		var user model.User
+		err = rows.Scan(&user.ID, &user.PassportNumber, &user.Name, &user.Surname, &user.Patronymic, &user.Address)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"error": err,
+			}).Error("Error scanning row")
+			return nil, err
+		}
+		users = append(users, user)
+	}
 
-    return users, nil
+	if err = rows.Err(); err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Error("Error fetching rows")
+		return nil, err
+	}
+
+	log.Debug("Successfully fetched users from the database")
+
+	return users, nil
 }
 
 func GetUser(db *sql.DB, id string) (model.User, error) {
@@ -133,7 +133,7 @@ func GetUser(db *sql.DB, id string) (model.User, error) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"error": err,
-			"id": id,
+			"id":    id,
 		}).Error("Error getting user from the database")
 		return model.User{}, err
 	}
@@ -186,7 +186,7 @@ func DeleteUser(db *sql.DB, id string) error {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"error": err,
-			"id": id,
+			"id":    id,
 		}).Error("Error deleting user from the database")
 		return err
 	}
@@ -209,8 +209,8 @@ func UpdateUser(db *sql.DB, id string, user *model.User) error {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"error": err,
-			"id": id,
-			"user": user,
+			"id":    id,
+			"user":  user,
 		}).Error("Error updating user in the database")
 		return err
 	}
@@ -238,7 +238,7 @@ func StartTask(db *sql.DB, id string) error {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"error": err,
-			"id": id,
+			"id":    id,
 		}).Error("Error starting task in the database")
 		return err
 	}
@@ -254,7 +254,7 @@ func EndTask(db *sql.DB, id string) error {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"error": err,
-			"id": id,
+			"id":    id,
 		}).Error("Error ending task in the database")
 		return err
 	}
@@ -269,10 +269,10 @@ func GetTasksByUserAndPeriod(db *sql.DB, userID string, start, end time.Time) ([
 	rows, err := db.Query("SELECT * FROM tasks WHERE user_id = $1 AND start_time >= $2 AND end_time <= $3", userID, start, end)
 	if err != nil {
 		log.WithFields(log.Fields{
-			"error": err,
+			"error":  err,
 			"userID": userID,
-			"start": start,
-			"end": end,
+			"start":  start,
+			"end":    end,
 		}).Error("Error getting tasks from the database")
 		return nil, err
 	}

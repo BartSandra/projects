@@ -24,7 +24,7 @@ func Test_openapi_DefaultAPIService(t *testing.T) {
 
 	t.Run("Test DefaultAPIService InfoGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.DefaultAPI.InfoGet(context.Background()).Execute()
 
